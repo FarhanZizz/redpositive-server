@@ -49,6 +49,31 @@ async function run() {
         res.status(500).json({ error: "Internal Server Error" })
       }
     })
+    app.patch("/update-data/:id", async (req, res) => {
+      try {
+        const id = req.params.id
+        const { name, email, phone, hobbies } = req.body
+        const query = { _id: new ObjectId(id) }
+        const update = {
+          $set: {
+            name,
+            email,
+            phone,
+            hobbies,
+          },
+        }
+        const result = await dataCollection.updateOne(query, update)
+        if (result.matchedCount === 1) {
+          res.status(200).json({ message: "Data updated successfully" })
+        } else {
+          res.status(404).json({ error: "Data not found" })
+        }
+      } catch (error) {
+        console.error("An error occurred while updating data:", error)
+        res.status(500).json({ error: "Internal Server Error" })
+      }
+    })
+
     app.delete("/delete-data/:id", async (req, res) => {
       const id = req.params.id
       const query = { _id: new ObjectId(id) }
