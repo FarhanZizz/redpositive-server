@@ -42,13 +42,18 @@ async function run() {
           phone,
           hobbies,
         }
-        console.log(data)
         const result = await dataCollection.insertOne(data)
         res.status(200).json(result)
       } catch (error) {
         console.error("An error occurred while adding data:", error)
         res.status(500).json({ error: "Internal Server Error" })
       }
+    })
+    app.delete("/delete-data/:id", async (req, res) => {
+      const id = req.params.id
+      const query = { _id: new ObjectId(id) }
+      const result = await dataCollection.deleteOne(query)
+      res.send(result)
     })
   } finally {
   }
